@@ -1,0 +1,14 @@
+  <!--Skills-->
+  <section [formGroup]="skillForm">
+    <h2>Habilidades</h2>
+    <mat-form-field appearance="outline">
+      <input matInput formControlName="skillName"/>
+    </mat-form-field>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="addSkills()"
+    >
+      Añadir Habilidades
+    </button>
+  </section>
