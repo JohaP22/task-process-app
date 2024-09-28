@@ -1,0 +1,45 @@
+<section>
+  <h1>Lista de Tareas</h1>
+  <ng-container *ngTemplateOutlet="filters"></ng-container>
+  <ng-container *ngTemplateOutlet="taskDetail"></ng-container>
+</section>
+
+<!-- Filters.-->
+<ng-template #filters>
+  <div>
+    <span>Filtros</span>
+    <a (click)="filterTasks('all')"> [ Todas ] </a>
+    <a (click)="filterTasks('complete')"> [ Completas ] </a>
+    <a (click)="filterTasks('incomplete')"> [ Pendientes ] </a>
+  </div>
+</ng-template>
+
+<!-- Filters.-->
+<ng-template #taskDetail>
+  <figure *ngFor="let task of copyTaskList">
+    <div>
+      <span>[{{ task.isCompleted ? "X" : "" }}]</span>
+      <span> {{ task.taskName }}</span>
+      <span> {{ task.limitDate }}</span>
+    </div>
+
+    <section>
+      <span>Personas asociadas:</span>
+      <ng-container
+        [ngTemplateOutlet]="peopleAssociate"
+        [ngTemplateOutletContext]="{
+          people: task.personList,
+          skills: task.taskSkill
+        }"
+      ></ng-container>
+    </section>
+  </figure>
+</ng-template>
+
+<!-- People.-->
+<ng-template #peopleAssociate let-people="people" let-skills="skills">
+  <section *ngFor="let person of people">
+    <span> {{ person.fullName }} ({{ person.age }}) </span>
+    <p>Habilidades: {{ skillsRelated(skills) }}</p>
+  </section>
+</ng-template>
