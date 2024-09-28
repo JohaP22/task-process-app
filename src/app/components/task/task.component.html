@@ -1,0 +1,62 @@
+<section>
+  <h1>Crear una tarea</h1>
+
+  <form [formGroup]="taskFormGroup">
+    <!--Name Task-->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre de la tarea</mat-label>
+      <input matInput formControlName="taskName" />
+    </mat-form-field>
+
+    <!--Limit date.-->
+    <mat-form-field appearance="outline">
+      <mat-label>Seleccionar fecha limite</mat-label>
+      <input
+        matInput
+        [min]="minDate"
+        [matDatepicker]="picker"
+        formControlName="limitDate"
+      />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>
+
+  <ng-container *ngTemplateOutlet="personForm"></ng-container>
+
+  <app-skill-detail (newSkill)="addNewSkill($event)"></app-skill-detail>
+
+  <button
+    mat-stroked-button
+    color="primary"
+    (click)="saveTask()"
+    [disabled]="taskFormGroup.invalid"
+  >
+    Guardar tarea
+  </button>
+</section>
+
+<!-- Person Form.-->
+<ng-template #personForm>
+  <section *ngFor="let person of dynamicPerson; index as i; let first = first">
+    <app-person-detail
+      [person]="person"
+      (newPerson)="addNewPerson($event)"
+    ></app-person-detail>
+    <button mat-mini-fab type="button" (click)="addNewPosition()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+    <button
+      *ngIf="!first"
+      mat-mini-fab
+      type="button"
+      (click)="removeSomePosition(i)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </section>
+</ng-template>
