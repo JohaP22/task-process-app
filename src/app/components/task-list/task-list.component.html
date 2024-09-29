@@ -16,7 +16,7 @@
 
 <!-- Filters.-->
 <ng-template #taskDetail>
-  <figure *ngFor="let task of copyTaskList">
+  <figure *ngFor="let task of copyTaskList; trackBy: trackByFn" >
     <div>
       <span>[{{ task.isCompleted ? "X" : "" }}]</span>
       <span> {{ task.taskName }}</span>

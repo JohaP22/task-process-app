@@ -11,12 +11,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule,
-} from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { TaskService } from 'src/app/services/task.service';
 import { SkillService } from 'src/app/services/skill.service';
@@ -28,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Skill } from 'src/app/models/skill';
 import { Task } from 'src/app/models/task';
+import { PeopleService } from 'src/app/services/people.service';
 /**
  * Component of tasks and its content.
  */
@@ -49,7 +45,6 @@ import { Task } from 'src/app/models/task';
     CommonModule,
   ],
   standalone: true,
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'ja-JP' }],
 })
 export class TaskComponent {
   /** Task form. */
@@ -68,9 +63,9 @@ export class TaskComponent {
 
   constructor(
     public taskService: TaskService,
-    public skillService: SkillService
+    public skillService: SkillService,
+    private peopleService: PeopleService
   ) {}
-
 
   /**Init lifecycle. */
   ngOnInit(): void {
@@ -99,11 +94,13 @@ export class TaskComponent {
   addNewPerson(event: FormGroup): void {
     this.taskFormGroup.controls.person.push(event);
     console.log(event, this.taskFormGroup);
+    this.peopleService.addPeopleData(event.value);
   }
 
   /** Add new skill. */
   addNewSkill(event: FormGroup): void {
     this.taskFormGroup.controls.skills.push(event);
+    this.skillService.addNewSkill(event.value);
   }
 
   /** Save task. */
@@ -119,14 +116,23 @@ export class TaskComponent {
     );
     const newFormGroup: Task = {
       taskName: this.taskFormGroup.controls.taskName.value || '',
-      limitDate: this.taskFormGroup.controls.limitDate.value || '',
+      limitDate: this.taskFormGroup.controls.limitDate.value
+        ? (this.taskFormGroup.controls.limitDate.value as unknown as Date)
+            .toISOString()
+            .split('T')[0]
+        : '',
       personList: taskPeople || [],
       taskSkill: skillTask,
       taskId: uuidv4(),
-      isCompleted: false
+      isCompleted: false,
     };
     const allTasks = this.taskService.addNewTask(newFormGroup);
     this.taskService.taskSubject$.next(allTasks);
-
+    this.peopleService.peopleSubject$.next(
+      this.taskFormGroup.controls.person.value
+    );
+    this.skillService.skillSubject$.next(
+      this.taskFormGroup.controls.skills.value
+    );
   }
 }

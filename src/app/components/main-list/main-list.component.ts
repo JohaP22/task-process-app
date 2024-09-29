@@ -10,28 +10,30 @@ import { SkillService } from 'src/app/services/skill.service';
   templateUrl: './main-list.component.html',
   styleUrls: ['./main-list.component.css'],
   standalone: true,
-  imports:[TaskListComponent, TaskComponent]
+  imports: [TaskListComponent, TaskComponent],
 })
 export class MainListComponent {
   /** List of task. */
   taskList: Task[] = [];
 
-  constructor(public taskService: TaskService, public skillService: SkillService) {}
+  constructor(
+    public taskService: TaskService,
+    public skillService: SkillService
+  ) {}
 
   /**Init lifecycle. */
   ngOnInit(): void {
-    this.taskList = this.taskService.getTaskList()
+    this.taskList = this.taskService.processingTask();
     this.subscribeTaskData$();
-    console.log( this.taskList);
+    console.log(this.taskList);
   }
 
-   /**
-   *
+  /**
+   * Subscribe to task data.
    */
- subscribeTaskData$(): void {
-  this.taskService.taskSubject$.pipe().subscribe((allSkills) => {
-    console.log('llego', allSkills);
-    this.taskList = allSkills;
-  });
-}
+  subscribeTaskData$(): void {
+    this.taskService.taskSubject$.pipe().subscribe((allTasks) => {
+      this.taskList = allTasks;
+    });
+  }
 }

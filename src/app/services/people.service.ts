@@ -18,4 +18,9 @@ export class PeopleService {
     return _.cloneDeep(this.peopleSubject$.value);
   }
 
+  addPeopleData(newPerson: Person): void {
+    const currentData = _.cloneDeep(this.peopleSubject$.value);
+    currentData.push(newPerson);
+    this.peopleSubject$.next(currentData);
+  }
 }

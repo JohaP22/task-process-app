@@ -13,7 +13,7 @@ import { TaskHelper } from '../helpers/task-helper';
 })
 export class TaskService {
   /** Data subject. */
-  taskSubject$ = new BehaviorSubject<Task[]>(this.processingTask());
+  taskSubject$ = new BehaviorSubject<Task[]>( TaskHelper.generateDataTask());
   /** All tasks. */
   allTasks: Task[] = [];
   /** All skills. */
@@ -25,6 +25,22 @@ export class TaskService {
     public skillService: SkillService,
     public peopleService: PeopleService
   ) {
+       this.allSkills = this.skillService.getSkillData();
+   this.allPeople = this.peopleService.getPeopleData();
+    this.subscribeSkillData$();
+    this.subscribePeopleData$();
+  }
+
+  subscribeSkillData$(): void {
+    this.skillService.skillSubject$.pipe().subscribe((allSkills) => {
+      this.allSkills = allSkills;
+    });
+  }
+
+  subscribePeopleData$(): void {
+    this.peopleService.peopleSubject$.pipe().subscribe((people) => {
+      this.allPeople = people;
+    });
   }
 
   /**
@@ -32,11 +48,8 @@ export class TaskService {
    * @returns An array with all tasks.
   */
  processingTask(): Task[] {
-   this.allTasks = TaskHelper.generateDataTask();
-   this.allSkills = this.skillService.getSkillData();
-   this.allPeople = this.peopleService.getPeopleData();
 
-    this.allTasks.map((task) => {
+  this.taskSubject$.value.map((task) => {
       task.taskSkill = task.taskSkill.map((skill) => {
         const skillFound = this.allSkills.find(
           ({ skillId }) => skillId === skill

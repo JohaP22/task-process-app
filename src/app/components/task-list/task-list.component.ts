@@ -16,8 +16,21 @@ import { SkillService } from 'src/app/services/skill.service';
   imports: [CommonModule],
 })
 export class TaskListComponent {
+  private _taskList: Task[] = [];
+
   /** All tasks. */
-  @Input() taskList: Task[] = [];
+  @Input() set taskList(value: Task[]) {
+    console.log('yes')
+    this._taskList = value;
+  }
+
+  /**
+   * Get tasks.
+   * @returns A task list.
+   */
+  get taskList(): Task[] {
+    return this._taskList;
+  }
 
   /** Copy of task list. */
   copyTaskList: Task[] = [];
@@ -43,5 +56,9 @@ export class TaskListComponent {
       if (source === 'incomplete') return !isCompleted;
       return true;
     });
+  }
+
+  trackByFn(index: number, item: any): number {
+    return item.id;
   }
 }

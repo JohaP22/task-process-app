@@ -24,5 +24,6 @@ export class SkillService {
     const currentData = _.cloneDeep(this.skillSubject$.value);
     currentData.push(newSkill);
     this.skillSubject$.next(currentData);
+
   }
 }
