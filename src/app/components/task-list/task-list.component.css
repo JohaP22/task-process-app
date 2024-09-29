@@ -9,6 +9,6 @@ a:hover {
 
 .task-list{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 }
