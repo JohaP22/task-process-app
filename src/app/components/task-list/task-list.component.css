@@ -6,3 +6,9 @@ a {
 a:hover {
   text-decoration: none;
 }
+
+.task-list{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

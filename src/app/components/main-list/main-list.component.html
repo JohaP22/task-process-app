@@ -1,2 +1,3 @@
-<app-task></app-task>
-<!-- <app-task-list [taskList]="taskList"></app-task-list> -->
+<app-task-list *ngIf="openList" [taskList]="taskList"></app-task-list>
+
+<app-task *ngIf="!openList" (savedTask)="openList = $event"></app-task>

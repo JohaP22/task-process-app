@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -47,6 +47,9 @@ import { PeopleService } from 'src/app/services/people.service';
   standalone: true,
 })
 export class TaskComponent {
+  /** Saved Task. */
+  @Output() savedTask = new EventEmitter<boolean>;
+
   /** Task form. */
   taskFormGroup = new FormGroup({
     taskName: new FormControl('', [Validators.required]),
@@ -134,5 +137,7 @@ export class TaskComponent {
     this.skillService.skillSubject$.next(
       this.taskFormGroup.controls.skills.value
     );
+
+    this.savedTask.emit(true);
   }
 }

@@ -4,17 +4,21 @@ import { TaskListComponent } from '../task-list/task-list.component';
 import { TaskComponent } from '../task/task.component';
 import { Task } from 'src/app/models/task';
 import { SkillService } from 'src/app/services/skill.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-main-list',
   templateUrl: './main-list.component.html',
   styleUrls: ['./main-list.component.css'],
   standalone: true,
-  imports: [TaskListComponent, TaskComponent],
+  imports: [TaskListComponent, TaskComponent, CommonModule],
 })
 export class MainListComponent {
   /** List of task. */
   taskList: Task[] = [];
+
+  /** Open list. */
+  openList = false;
 
   constructor(
     public taskService: TaskService,
@@ -25,7 +29,6 @@ export class MainListComponent {
   ngOnInit(): void {
     this.taskList = this.taskService.processingTask();
     this.subscribeTaskData$();
-    console.log(this.taskList);
   }
 
   /**
